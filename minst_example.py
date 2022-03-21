@@ -1,7 +1,6 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-
 # Load the Fashion MNIST dataset
 fmnist = tf.keras.datasets.fashion_mnist
 
@@ -59,6 +58,9 @@ model.add(tf.keras.layers.Dense(units=256, activation=tf.nn.relu))
 # In this case the component with highest probability is our labeling
 model.add(tf.keras.layers.Dense(units=10, activation=tf.nn.softmax))
 
+# There are 4 layers in this NN. The first layer must accept data with shape equal to the shape input data
+# and the last layer's output must produce data of the expected output data.
+# The inner layers can have arbitraty output size and they are called INNER LAYERS
 
 # optimizer
 #   Adam: one of the available algorithms
