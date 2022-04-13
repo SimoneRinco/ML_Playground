@@ -26,8 +26,8 @@ import math
 # as having mean 0 and variance 1.
 # To achieve that, both input and output variables in the training set
 # are linearly transformed:
-#   xn = (x - mean_x) / variance_x
-#   yn = (y - mean_y) / variance_y
+#   xn = (x - mean_x) / sqrt(variance_x)
+#   yn = (y - mean_y) / sqrt(variance_y)
 #
 # Observe that both mean and variance depend on the training set and these
 # parameters are NOT trainable.
