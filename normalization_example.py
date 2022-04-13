@@ -33,8 +33,10 @@ import math
 # parameters are NOT trainable.
 # The challenge is to keep both input and output of the total model
 
+
 def get_y(x, beta):
     return beta * (x - 1.0)
+
 
 def print_info(v, v_norm):
     print("  original vector (first elements)")
@@ -51,13 +53,14 @@ def main(alpha, beta, normalize_input, normalize_output):
     n_samples = 10000
 
     # Input of the NN
-    initial_input = Input(shape=(1,), name='initial_input')
+    initial_input = Input(shape=(1, ), name='initial_input')
 
     x = np.linspace(start=-alpha, stop=alpha, num=n_samples)
     y = get_y(x, beta)
 
     if normalize_input:
-        x_norm_layer = layers.Normalization(axis=None, name='my_input_normalization')
+        x_norm_layer = layers.Normalization(axis=None,
+                                            name='my_input_normalization')
         # Configure mean and variance based on the input values in the training set
         x_norm_layer.adapt(x)
         x_norm = x_norm_layer(x)
@@ -92,20 +95,23 @@ def main(alpha, beta, normalize_input, normalize_output):
         # so the inverse is
         # x = (x' - (-mean/sqrt(var)) / (1 / sqrt(var))
 
-        denorm_mean = float(- y_norm_layer.mean / math.sqrt(y_norm_layer.variance))
+        denorm_mean = float(-y_norm_layer.mean /
+                            math.sqrt(y_norm_layer.variance))
         denorm_variance = float(1.0 / y_norm_layer.variance)
-        print(f"Denormalization mean and var: {denorm_mean}, {denorm_variance}")
-        y_denorm_layer = layers.Normalization(
-            axis=None,
-            mean=denorm_mean,
-            variance=denorm_variance,
-            name='my_output_denormalization')
+        print(
+            f"Denormalization mean and var: {denorm_mean}, {denorm_variance}")
+        y_denorm_layer = layers.Normalization(axis=None,
+                                              mean=denorm_mean,
+                                              variance=denorm_variance,
+                                              name='my_output_denormalization')
 
         y_denorm = y_denorm_layer(y_norm)
         print("===== Denormalized info")
         # Here y_denorm should be equal to the original y
         print_info(y_denorm, y_norm)
-        assert math.fabs(y[0] - y_denorm[0]) < 1e-6, f"y[0] and y_denorm[0] are different ({y[0]} vs {y_denorm[0]})"
+        assert math.fabs(
+            y[0] - y_denorm[0]
+        ) < 1e-6, f"y[0] and y_denorm[0] are different ({y[0]} vs {y_denorm[0]})"
 
         # Now we expect the output of the last dense layer to contain small values
         denormalized_output = y_denorm_layer(out_layer2)
@@ -135,7 +141,7 @@ def main(alpha, beta, normalize_input, normalize_output):
     model.fit(x=x, y=y, epochs=10)
 
     # prediction
-    x_new = np.linspace(start=-0.2 * alpha, stop=0.2*alpha, num=5)
+    x_new = np.linspace(start=-0.2 * alpha, stop=0.2 * alpha, num=5)
 
     print("===== Prediction")
     print("x_new")
@@ -182,10 +188,3 @@ if __name__ == "__main__":
     #  1000    0.000001         yes             no           no
     #  1000    0.000001          no            yes           no
     #  1000    0.000001         yes            yes           no  Both scaling of the input and the output are needed to obtain convergence!
-
-
-
-
-
-
-
